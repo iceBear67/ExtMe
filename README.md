@@ -32,6 +32,18 @@ repositories {
     }
 }
 dependencies {
-    annotationProcessor 'com.github.iceBear67:ExtMe'
+    implementation ('com.github.iceBear67:ExtMe:Tag'){
+        exclude 'com.google.code.gson:gson:2.8.9' // if you want
+    }
+}
+```
+
+Addition for plugin(@PluginTarget):
+```groovy
+dependencies {
+    implementation ('com.github.iceBear67:ExtMe:Tag'){
+        exclude 'com.google.code.gson:gson:2.8.9' // if you want
+    }
+    annotationProcessor 'com.github.iceBear67:ExtMe:Tag'
 }
 ```
