@@ -145,5 +145,16 @@ public class PluginManager {
         }
         DependencyResolver resolver = new DependencyResolver(descs);
         descs.keySet().forEach(resolver::resolve); // load plugins.
+
+        // call onLoad
+        loader.initializePlugins();
+    }
+
+    public void enablePlugins() {
+        loader.enablePlugins();
+    }
+
+    public void disablePlugins() {
+        loader.disablePlugins();
     }
 }

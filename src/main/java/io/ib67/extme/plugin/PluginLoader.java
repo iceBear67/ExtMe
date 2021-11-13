@@ -13,11 +13,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
@@ -117,10 +115,22 @@ public class PluginLoader {
         PluginClassLoader pl = new PluginClassLoader(file, this, description);
         try {
             Class<?> pluginClazz = pl.findClass(description.getMain(), false);
-            plugins.put(description.getId(),new PluginHolder(pl,pluginConstructor.apply(pluginClazz),description));
+            plugins.put(description.getId(), new PluginHolder(pl, pluginConstructor.apply(pluginClazz), description));
             return getPluginById(description.getId());
         } catch (ClassNotFoundException e) {
             throw new InvalidPluginException("Can't find main class " + description.getMain() + " for plugin " + description, e);
         }
+    }
+
+    public void enablePlugins() {
+        getPlugins().forEach(Plugin::onEnable);
+    }
+
+    public void disablePlugins() {
+        getPlugins().forEach(Plugin::onDisable);
+    }
+
+    public void initializePlugins() {
+        getPlugins().forEach(Plugin::onLoad);
     }
 }
