@@ -1,5 +1,5 @@
 # ExtMe
-Extremely simple Java plugin framework.
+Extremely simple and lightweight(~26KiB) plugin framework.
 
 ```java
 package io.ib67.extme;
