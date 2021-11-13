@@ -99,31 +99,33 @@ public class PluginManager {
         //try to load.
 
         @RequiredArgsConstructor
-        class DependencyResolver{
+        class DependencyResolver {
             private final Map<String, DescriptionAndFile> descs;
             private final Set<String> failedPlugins = new HashSet<>();
-            void resolve(String id){
-                resolve(id,new Stack<>());
+
+            void resolve(String id) {
+                resolve(id, new Stack<>());
             }
-            void resolve(String id,Stack<String> resolvingStacks){
+
+            void resolve(String id, Stack<String> resolvingStacks) {
                 DescriptionAndFile description = descs.get(id);
 
                 //check
-                if(loader.isPluginLoaded(id)){
+                if (loader.isPluginLoaded(id)) {
                     return; // already resolved.
                 }
-                if(failedPlugins.contains(id)){
-                    throw new InvalidDependency(id+" was unable to resolve.");
+                if (failedPlugins.contains(id)) {
+                    throw new InvalidDependency(id + " was unable to resolve.");
                 }
-                if(resolvingStacks.contains(id)){
-                    throw new IllegalDependLoopException("Dependency loop detected: "+resolvingStacks);
+                if (resolvingStacks.contains(id)) {
+                    throw new IllegalDependLoopException("Dependency loop detected: " + resolvingStacks);
                 }
                 resolvingStacks.add(id);
                 // load dependency
                 for (String dependency : description.description.getDependencies()) {
                     try {
                         resolve(dependency, resolvingStacks);
-                    }catch(Throwable throwable){
+                    } catch (Throwable throwable) {
                         throwable.printStackTrace();
                         resolvingStacks.pop();
                         return;

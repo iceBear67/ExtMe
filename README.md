@@ -4,6 +4,7 @@ Extremely simple Java plugin framework.
 ```java
 package io.ib67.extme;
 
+import io.ib67.extme.plugin.Plugin;
 import io.ib67.extme.annotation.PluginTarget;
 
 import java.nio.file.Paths;
@@ -16,7 +17,7 @@ import java.nio.file.Paths;
         depends = {"a", "B"},
         conflicts = {"c"}
 )
-public class Show {
+public class Show extends Plugin {
     {
         PluginManager pm = PluginManager.of(Paths.get("plugins"), ClassSharingStrategy.DEPEND);
         pm.loadPlugins();
@@ -38,12 +39,18 @@ dependencies {
 }
 ```
 
-Addition for plugin(@PluginTarget):
+Addition for plugin(@PluginTarget, which is a compiler plugin that validates & generates configuration):
+
 ```groovy
 dependencies {
-    implementation ('com.github.iceBear67:ExtMe:Tag'){
+    implementation('com.github.iceBear67:ExtMe:Tag') {
         exclude 'com.google.code.gson:gson:2.8.9' // if you want
     }
     annotationProcessor 'com.github.iceBear67:ExtMe:Tag'
 }
 ```
+
+# Future Plans
+
+- [ ] Dependency Versioning
+- [ ] Soft Dependencies

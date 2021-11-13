@@ -1,3 +1,4 @@
 rootProject.name = 'ExtMe'
 include 'ap'
+include 'examplePlugin'
 
