@@ -51,6 +51,9 @@ public class CodeGen extends AbstractProcessor {
                 if (id.trim().isEmpty()) {
                     throw new IllegalArgumentException("ID cant be blank.");
                 }
+                if (id.trim().contains(" ")) {
+                    throw new IllegalArgumentException("ID cannot contain spaces.");
+                }
                 // must be a Plugin
                 TypeElement clazz = ((TypeElement) element);
                 if (!clazz.getSuperclass().toString().equals(Plugin.class.getCanonicalName())) {
