@@ -12,4 +12,6 @@ public @interface PluginTarget {
     String version();
     String[] depends() default {};
     String[] conflicts() default {};
+
+    String[] softDepends() default {};
 }

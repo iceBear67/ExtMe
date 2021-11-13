@@ -53,4 +53,5 @@ dependencies {
 # Future Plans
 
 - [ ] Dependency Versioning
-- [ ] Soft Dependencies
+- [x] Soft Dependencies
+- [ ] `Provides` property

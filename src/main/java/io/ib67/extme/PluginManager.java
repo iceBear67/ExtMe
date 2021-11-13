@@ -101,13 +101,14 @@ public class PluginManager {
         @RequiredArgsConstructor
         class DependencyResolver {
             private final Map<String, DescriptionAndFile> descs;
+            private final boolean softLoad;
             private final Set<String> failedPlugins = new HashSet<>();
 
             void resolve(String id) {
-                resolve(id, new Stack<>());
+                resolve(id, new Stack<>(), false);
             }
 
-            void resolve(String id, Stack<String> resolvingStacks) {
+            void resolve(String id, Stack<String> resolvingStacks, boolean tryLoad) {
                 DescriptionAndFile description = descs.get(id);
 
                 //check
@@ -124,9 +125,18 @@ public class PluginManager {
                 // load dependency
                 for (String dependency : description.description.getDependencies()) {
                     try {
-                        resolve(dependency, resolvingStacks);
+                        resolve(dependency, resolvingStacks, false);
                     } catch (Throwable throwable) {
                         throwable.printStackTrace();
+                        resolvingStacks.pop();
+                        return;
+                    }
+                }
+                // soft dependencies
+                for (String dependency : description.description.getSoftDependencies()) {
+                    try {
+                        resolve(dependency, resolvingStacks, true);
+                    } catch (Throwable throwable) {
                         resolvingStacks.pop();
                         return;
                     }
@@ -137,13 +147,13 @@ public class PluginManager {
                 try {
                     loader.loadPlugin(description.file);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    if (!tryLoad) e.printStackTrace();
                     failedPlugins.add(id);
                 }
                 resolvingStacks.pop();
             }
         }
-        DependencyResolver resolver = new DependencyResolver(descs);
+        DependencyResolver resolver = new DependencyResolver(descs, false);
         descs.keySet().forEach(resolver::resolve); // load plugins.
 
         // call onLoad
